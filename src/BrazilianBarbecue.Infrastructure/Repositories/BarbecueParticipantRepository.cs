@@ -51,8 +51,11 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
                                     ,[BarbecueParticipantResult].[ParticipantId]
                                     ,[BarbecueParticipantResult].[ContributionAmount]
                                     ,[BarbecueParticipantResult].[Payed]
+									,[Participant].[Name]
+									,[Participant].[Email]									
                                 FROM [BarbecueParticipant] As [BarbecueParticipantResult]
-                               WHERE [BarbecueParticipantResult].[BarbecueScheduleId] = @id";
+								Inner Join [Participant] On [Participant].[Id] = [BarbecueParticipantResult].[ParticipantId]
+                               WHERE [BarbecueParticipantResult].[BarbecueScheduleId] = 1";
 
                 return _connection.Query<BarbecueParticipantResult>(query, new {id});
             }

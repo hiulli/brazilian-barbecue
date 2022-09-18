@@ -14,5 +14,7 @@ namespace BrazilianBarbecue.Core.Interfaces
         CommandResult GetAll();
 
         CommandResult GetById(int id);
+
+        CommandResult GetDetailById(int id);
     }
 }

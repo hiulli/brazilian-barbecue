@@ -32,6 +32,9 @@ namespace BrazilianBarbecue.WebAPI.Controllers
 
         [HttpGet("{id:int}")]
         public CommandResult GetById([FromRoute] int id) => _barbecueScheduleService.GetById(id);
+
+        [HttpGet("{id:int}/detail")]
+        public CommandResult GetDetailById([FromRoute] int id) => _barbecueScheduleService.GetDetailById(id);
         #endregion
 
         #region BarbecueParticipant

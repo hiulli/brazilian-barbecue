@@ -74,6 +74,34 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             }
         }
 
+        public BarbecueDetailResult GetDetailById(int id)
+        {
+            try
+            {
+                var query = @"Select [BarbecueDetailResult].[Id]
+                                    ,[BarbecueDetailResult].[BarbecueDate]
+                                    ,[BarbecueDetailResult].[Description]
+                                    ,[BarbecueDetailResult].[AdditionalObservations]
+                                    ,[BarbecueDetailResult].[SuggestedAmountDrink]
+                                    ,[BarbecueDetailResult].[SuggestedAmountFood] 
+                                    ,[BarbecueAmount].[CollectedAmount]
+                                From [BarbecueSchedule] As [BarbecueDetailResult]
+                               Inner Join (Select [BarbecueParticipant].[BarbecueScheduleId] ,Sum([ContributionAmount]) CollectedAmount
+                                             From [BarbecueParticipant]
+                                            Where [BarbecueParticipant].[Payed] = 1 
+                                              And [BarbecueParticipant].[BarbecueScheduleId] = @Id
+                                            Group by [BarbecueParticipant].[BarbecueScheduleId]) As [BarbecueAmount] 
+                                        On [BarbecueAmount].[BarbecueScheduleId] = [BarbecueDetailResult].[Id]
+                                 Where [BarbecueDetailResult].[Id] = @Id";
+
+                return _connection.QueryFirst<BarbecueDetailResult>(query, new { id });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void Insert(BarbecueSchedule entity)
         {
             try
@@ -97,6 +125,5 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
                 throw ex;
             }
         }
-
     }
 }

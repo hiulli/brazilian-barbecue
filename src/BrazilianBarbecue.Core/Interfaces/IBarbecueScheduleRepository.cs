@@ -8,5 +8,7 @@ namespace BrazilianBarbecue.Core.Interfaces
         IEnumerable<BarbecueScheduleResult> GetAll();
 
         BarbecueScheduleResult GetById(int id);
+
+        BarbecueDetailResult GetDetailById(int id);
     }
 }

@@ -2,17 +2,20 @@
 using BrazilianBarbecue.Core.Entities.Model.Result;
 using BrazilianBarbecue.Core.Interfaces;
 using BrazilianBarbecue.Core.Model.Commands.Input;
-
+using BrazilianBarbecue.Core.Model.Commands.Results;
 
 namespace BrazilianBarbecue.Core.Services
 {
     public class BarbecueScheduleService : IBarbecueScheduleService
     {
         private readonly IBarbecueScheduleRepository _barbecueScheduleRepository;
+        private readonly IBarbecueParticipantRepository _barbecueParticipantRepository;
 
-        public BarbecueScheduleService(IBarbecueScheduleRepository barbecueScheduleRepository)
+        public BarbecueScheduleService(IBarbecueScheduleRepository barbecueScheduleRepository
+            , IBarbecueParticipantRepository barbecueParticipantRepository)
         {
             _barbecueScheduleRepository = barbecueScheduleRepository;
+            _barbecueParticipantRepository = barbecueParticipantRepository;
 
         }
 
@@ -46,6 +49,22 @@ namespace BrazilianBarbecue.Core.Services
             try
             {
                 return new CommandResult(string.Empty, true, _barbecueScheduleRepository.GetById(id));
+            }
+            catch
+            {
+                return new CommandResult("Ocorreu um erro ao tentar retornar o churrasco", false, null);
+            }
+        }
+
+        public CommandResult GetDetailById(int id)
+        {
+            try
+            {
+                BarbecueDetailResult data = _barbecueScheduleRepository.GetDetailById(id);
+                data.Participants.AddRange(_barbecueParticipantRepository.GetAllByBarbecueId(id).ToList());
+                
+
+                return new CommandResult(string.Empty, true, data);
             }
             catch
             {
