@@ -10,5 +10,9 @@ namespace BrazilianBarbecue.Core.Interfaces
         BarbecueParticipantResult GetById(int id);
 
         void ConfirmPayment(int id);
+
+        bool ExistParticipantInBarbecue(int participantId);
+
+        void DeleteAllByBarbecueId(int barbecueId);
     }
 }

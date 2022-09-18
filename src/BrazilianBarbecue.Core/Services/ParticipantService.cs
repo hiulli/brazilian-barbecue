@@ -8,10 +8,13 @@ namespace BrazilianBarbecue.Core.Services
     public class ParticipantService : IParticipantService
     {   
         private readonly IParticipantRepository _participantRepository;
+        private readonly IBarbecueParticipantRepository _barbecueParticipantRepository;
 
-        public ParticipantService(IParticipantRepository participantRepository)
+        public ParticipantService(IParticipantRepository participantRepository,
+            IBarbecueParticipantRepository barbecueParticipantRepository)
         {
-            _participantRepository = participantRepository;     
+            _participantRepository = participantRepository;
+            _barbecueParticipantRepository = barbecueParticipantRepository;
         }
 
         public CommandResult Insert(CreateParticipantCommand cmd)
@@ -21,6 +24,13 @@ namespace BrazilianBarbecue.Core.Services
                 cmd.Validate();
 
                 if (!cmd.IsValid) return new CommandResult("Error", false, cmd.Notifications);
+
+                var participant = _participantRepository.GetByEmail(cmd.Email);
+
+                if (participant != null)
+                {
+                    return new CommandResult("Email já utilizado", false, null);
+                }
 
                 _participantRepository.Insert(new Participant(cmd));
 
@@ -40,6 +50,13 @@ namespace BrazilianBarbecue.Core.Services
 
                 if (!cmd.IsValid) return new CommandResult("Error", false, cmd.Notifications);
 
+                var participant = _participantRepository.GetByEmail(cmd.Email);
+
+                if (participant != null && participant.Id != cmd.Id)
+                {
+                    return new CommandResult("Email já utilizado", false, null);
+                }
+
                 _participantRepository.Update(new Participant(cmd));
                 return new CommandResult("Participante alterado com sucesso", true, null);
             }
@@ -53,6 +70,11 @@ namespace BrazilianBarbecue.Core.Services
         {
             try
             {
+                if(_barbecueParticipantRepository.ExistParticipantInBarbecue(id)) 
+                {
+                    return new CommandResult("Participante não pode ser excluido", false, null);
+                }
+
                 _participantRepository.Delete(id);
                 return new CommandResult("Participante excluido com sucesso", true, null);
             }

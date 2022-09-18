@@ -6,15 +6,15 @@ using BrazilianBarbecue.Core.Model.Commands.Results;
 
 namespace BrazilianBarbecue.Core.Services
 {
-    public class BarbecueScheduleService : IBarbecueScheduleService
+    public class BarbecueService : IBarbecueService
     {
-        private readonly IBarbecueScheduleRepository _barbecueScheduleRepository;
+        private readonly IBarbecueRepository _barbecueRepository;
         private readonly IBarbecueParticipantRepository _barbecueParticipantRepository;
 
-        public BarbecueScheduleService(IBarbecueScheduleRepository barbecueScheduleRepository
+        public BarbecueService(IBarbecueRepository barbecueRepository
             , IBarbecueParticipantRepository barbecueParticipantRepository)
         {
-            _barbecueScheduleRepository = barbecueScheduleRepository;
+            _barbecueRepository = barbecueRepository;
             _barbecueParticipantRepository = barbecueParticipantRepository;
 
         }
@@ -23,7 +23,8 @@ namespace BrazilianBarbecue.Core.Services
         {
             try
             {
-                _barbecueScheduleRepository.Delete(id);
+                _barbecueParticipantRepository.DeleteAllByBarbecueId(id);
+                _barbecueRepository.Delete(id);
                 return new CommandResult("Churrasco excluído com sucesso", true, null);
             }
             catch
@@ -36,7 +37,7 @@ namespace BrazilianBarbecue.Core.Services
         {
             try
             {   
-                return new CommandResult(string.Empty, true, _barbecueScheduleRepository.GetAll());
+                return new CommandResult(string.Empty, true, _barbecueRepository.GetAll());
             }
             catch
             {
@@ -48,7 +49,7 @@ namespace BrazilianBarbecue.Core.Services
         {
             try
             {
-                return new CommandResult(string.Empty, true, _barbecueScheduleRepository.GetById(id));
+                return new CommandResult(string.Empty, true, _barbecueRepository.GetById(id));
             }
             catch
             {
@@ -60,7 +61,7 @@ namespace BrazilianBarbecue.Core.Services
         {
             try
             {
-                BarbecueDetailResult data = _barbecueScheduleRepository.GetDetailById(id);
+                BarbecueDetailResult data = _barbecueRepository.GetDetailById(id);
                 data.Participants.AddRange(_barbecueParticipantRepository.GetAllByBarbecueId(id).ToList());
                 
 
@@ -72,14 +73,14 @@ namespace BrazilianBarbecue.Core.Services
             }
         }
 
-        public CommandResult Insert(CreateBarbecueScheduleCommand cmd)
+        public CommandResult Insert(CreateBarbecueCommand cmd)
         {
             try
             {
                 cmd.Validate();
                 if (!cmd.IsValid) return new CommandResult("Error", false, cmd.Notifications);
 
-                _barbecueScheduleRepository.Insert(new BarbecueSchedule(cmd));
+                _barbecueRepository.Insert(new Barbecue(cmd));
                 return new CommandResult("Churrasco agendado com sucesso", true, null);
             }
             catch
@@ -88,7 +89,7 @@ namespace BrazilianBarbecue.Core.Services
             }
         }
 
-        public CommandResult Update(UpdateBarbecueScheduleCommand cmd)
+        public CommandResult Update(UpdateBarbecueCommand cmd)
         {
             cmd.Validate();
 
@@ -96,7 +97,7 @@ namespace BrazilianBarbecue.Core.Services
 
             try
             {
-                _barbecueScheduleRepository.Update(new BarbecueSchedule(cmd));
+                _barbecueRepository.Update(new Barbecue(cmd));
                 return new CommandResult("Churrasco agendado foi alterado com sucesso", true, null);
             }
             catch

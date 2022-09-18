@@ -30,6 +30,24 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             }
         }
 
+        public ParticipantResult GetByEmail(string email)
+        {
+            try
+            {
+                var query = @"Select [ParticipantResult].[Id]
+                                    ,[ParticipantResult].[Name]
+                                    ,[ParticipantResult].[Email]
+                                From [Participant] As [ParticipantResult] 
+                               Where [ParticipantResult].[Email] = @email";
+
+                return _connection.QueryFirstOrDefault<ParticipantResult>(query, new { email });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public IEnumerable<ParticipantResult> GetAll()
         {
             try

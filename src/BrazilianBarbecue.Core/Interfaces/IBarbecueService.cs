@@ -3,11 +3,11 @@ using BrazilianBarbecue.Core.Model.Commands.Input;
 
 namespace BrazilianBarbecue.Core.Interfaces
 {
-    public interface IBarbecueScheduleService
+    public interface IBarbecueService
     {
-        CommandResult Insert(CreateBarbecueScheduleCommand cmd);
+        CommandResult Insert(CreateBarbecueCommand cmd);
 
-        CommandResult Update(UpdateBarbecueScheduleCommand cmd);
+        CommandResult Update(UpdateBarbecueCommand cmd);
 
         CommandResult Delete(int id);
 

@@ -1,6 +1,6 @@
 ﻿namespace BrazilianBarbecue.Core.Model.Commands.Results
 {
-    public class BarbecueScheduleResult
+    public class BarbecueResult
     {
         public int Id { get; set; }
         public int ParticipantId { get; set; }

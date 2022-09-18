@@ -3,11 +3,11 @@ using BrazilianBarbecue.Core.Model.Commands.Results;
 
 namespace BrazilianBarbecue.Core.Interfaces
 {
-    public interface IBarbecueScheduleRepository : IRepository<BarbecueSchedule>
+    public interface IBarbecueRepository : IRepository<Barbecue>
     {
-        IEnumerable<BarbecueScheduleResult> GetAll();
+        IEnumerable<BarbecueResult> GetAll();
 
-        BarbecueScheduleResult GetById(int id);
+        BarbecueResult GetById(int id);
 
         BarbecueDetailResult GetDetailById(int id);
     }

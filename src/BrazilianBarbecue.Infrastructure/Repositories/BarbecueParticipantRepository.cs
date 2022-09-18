@@ -42,12 +42,40 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             }
         }
 
+        public void DeleteAllByBarbecueId(int barbecueId)
+        {
+            try
+            {
+                _connection.Execute("Delete From [BarbecueParticipant] Where barbecueId = @barbecueId", param: new { barbecueId });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool ExistParticipantInBarbecue(int participantId)
+        {
+             try
+            {
+                var query = @"Select COUNT(1)
+                                From BarbecueParticipant 
+                               Where [BarbecueParticipant].[ParticipantId] = @participantId";
+
+                return _connection.QueryFirst<int>(query, new { participantId }) > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public IEnumerable<BarbecueParticipantResult> GetAllByBarbecueId(int id)
         {
             try
             {
                 var query = @"SELECT [BarbecueParticipantResult].[Id]
-                                    ,[BarbecueParticipantResult].[BarbecueScheduleId]
+                                    ,[BarbecueParticipantResult].[BarbecueId]
                                     ,[BarbecueParticipantResult].[ParticipantId]
                                     ,[BarbecueParticipantResult].[ContributionAmount]
                                     ,[BarbecueParticipantResult].[Payed]
@@ -55,7 +83,7 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
 									,[Participant].[Email]									
                                 FROM [BarbecueParticipant] As [BarbecueParticipantResult]
 								Inner Join [Participant] On [Participant].[Id] = [BarbecueParticipantResult].[ParticipantId]
-                               WHERE [BarbecueParticipantResult].[BarbecueScheduleId] = 1";
+                               WHERE [BarbecueParticipantResult].[BarbecueId] = 1";
 
                 return _connection.Query<BarbecueParticipantResult>(query, new {id});
             }
@@ -70,7 +98,7 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             try
             {
                 var query = @"SELECT [BarbecueParticipantResult].[Id]
-                                    ,[BarbecueParticipantResult].[BarbecueScheduleId]
+                                    ,[BarbecueParticipantResult].[BarbecueId]
                                     ,[BarbecueParticipantResult].[ParticipantId]
                                     ,[BarbecueParticipantResult].[ContributionAmount]
                                     ,[BarbecueParticipantResult].[Payed]

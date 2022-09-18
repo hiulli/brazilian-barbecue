@@ -2,9 +2,9 @@
 
 namespace BrazilianBarbecue.Core.Entities
 {
-    public class BarbecueSchedule
+    public class Barbecue
     {
-        public BarbecueSchedule(CreateBarbecueScheduleCommand cmd)
+        public Barbecue(CreateBarbecueCommand cmd)
         {
             BarbecueDate = cmd.BarbecueDate;
             Description = cmd.Description;
@@ -13,7 +13,7 @@ namespace BrazilianBarbecue.Core.Entities
             SuggestedAmountFood = cmd.SuggestedAmountFood;
         }
 
-        public BarbecueSchedule(UpdateBarbecueScheduleCommand cmd)
+        public Barbecue(UpdateBarbecueCommand cmd)
         {
             Id = cmd.Id;         
             BarbecueDate = cmd.BarbecueDate;

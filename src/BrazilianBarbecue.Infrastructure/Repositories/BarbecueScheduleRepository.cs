@@ -9,12 +9,12 @@ using System.Data.SqlClient;
 
 namespace BrazilianBarbecue.Infrastructure.Repositories
 {
-    public class BarbecueScheduleRepository : IBarbecueScheduleRepository
+    public class BarbecueRepository : IBarbecueRepository
     {
         private readonly SqlConnection _connection;
-        private readonly ScriptUtil<BarbecueSchedule> _scriptUtil = new ScriptUtil<BarbecueSchedule>();
+        private readonly ScriptUtil<Barbecue> _scriptUtil = new ScriptUtil<Barbecue>();
 
-        public BarbecueScheduleRepository(IOptions<SqlServerConfiguration> sqlServerConfiguration)
+        public BarbecueRepository(IOptions<SqlServerConfiguration> sqlServerConfiguration)
         {
             _connection = new SqlConnection(sqlServerConfiguration.Value.SQLConnection);
         }
@@ -23,7 +23,7 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
         {
             try
             {
-                _connection.Execute("Delete From [BarbecueSchedule] Where Id = @id", param: new { id });
+                _connection.Execute("Delete From [Barbecue] Where Id = @id", param: new { id });
             }
             catch (Exception ex)
             {
@@ -31,20 +31,19 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             }
         }
 
-        public IEnumerable<BarbecueScheduleResult> GetAll()
+        public IEnumerable<BarbecueResult> GetAll()
         {
             try
             {
-                var query = @"SELECT BarbecueScheduleResult.[Id]
-                                    ,BarbecueScheduleResult.[ParticipantId]
-                                    ,BarbecueScheduleResult.[BarbecueDate]
-                                    ,BarbecueScheduleResult.[Description]
-                                    ,BarbecueScheduleResult.[AdditionalObservations]
-                                    ,BarbecueScheduleResult.[SuggestedAmountDrink]
-                                    ,BarbecueScheduleResult.[SuggestedAmountFood]
-                                FROM [BarbecueSchedule] As BarbecueScheduleResult";
+                var query = @"SELECT [BarbecueResult].[Id]                                    
+                                    ,[BarbecueResult].[BarbecueDate]
+                                    ,[BarbecueResult].[Description]
+                                    ,[BarbecueResult].[AdditionalObservations]
+                                    ,[BarbecueResult].[SuggestedAmountDrink]
+                                    ,[BarbecueResult].[SuggestedAmountFood]
+                                FROM [Barbecue] As BarbecueResult";
 
-                return _connection.Query<BarbecueScheduleResult>(query);
+                return _connection.Query<BarbecueResult>(query);
             }
             catch (Exception ex)
             {
@@ -52,21 +51,20 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             }
         }
 
-        public BarbecueScheduleResult GetById(int id)
+        public BarbecueResult GetById(int id)
         {
             try
             {
-                var query = @"SELECT BarbecueScheduleResult.[Id]
-                                    ,BarbecueScheduleResult.[ParticipantId]
-                                    ,BarbecueScheduleResult.[BarbecueDate]
-                                    ,BarbecueScheduleResult.[Description]
-                                    ,BarbecueScheduleResult.[AdditionalObservations]
-                                    ,BarbecueScheduleResult.[SuggestedAmountDrink]
-                                    ,BarbecueScheduleResult.[SuggestedAmountFood]
-                                FROM [BarbecueSchedule] As BarbecueScheduleResult
-                               Where BarbecueScheduleResult.[Id] = @id ";
+                var query = @"SELECT BarbecueResult.[Id]                                    
+                                    ,BarbecueResult.[BarbecueDate]
+                                    ,BarbecueResult.[Description]
+                                    ,BarbecueResult.[AdditionalObservations]
+                                    ,BarbecueResult.[SuggestedAmountDrink]
+                                    ,BarbecueResult.[SuggestedAmountFood]
+                                FROM [Barbecue] As BarbecueResult
+                               Where BarbecueResult.[Id] = @id ";
 
-                return _connection.QueryFirst<BarbecueScheduleResult>(query, new { id });
+                return _connection.QueryFirst<BarbecueResult>(query, new { id });
             }
             catch (Exception ex)
             {
@@ -85,13 +83,13 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
                                     ,[BarbecueDetailResult].[SuggestedAmountDrink]
                                     ,[BarbecueDetailResult].[SuggestedAmountFood] 
                                     ,[BarbecueAmount].[CollectedAmount]
-                                From [BarbecueSchedule] As [BarbecueDetailResult]
-                               Inner Join (Select [BarbecueParticipant].[BarbecueScheduleId] ,Sum([ContributionAmount]) CollectedAmount
+                                From [Barbecue] As [BarbecueDetailResult]
+                               Left Join (Select [BarbecueParticipant].[BarbecueId] ,Sum([ContributionAmount]) CollectedAmount
                                              From [BarbecueParticipant]
                                             Where [BarbecueParticipant].[Payed] = 1 
-                                              And [BarbecueParticipant].[BarbecueScheduleId] = @Id
-                                            Group by [BarbecueParticipant].[BarbecueScheduleId]) As [BarbecueAmount] 
-                                        On [BarbecueAmount].[BarbecueScheduleId] = [BarbecueDetailResult].[Id]
+                                              And [BarbecueParticipant].[BarbecueId] = @Id
+                                            Group by [BarbecueParticipant].[BarbecueId]) As [BarbecueAmount] 
+                                        On [BarbecueAmount].[BarbecueId] = [BarbecueDetailResult].[Id]
                                  Where [BarbecueDetailResult].[Id] = @Id";
 
                 return _connection.QueryFirst<BarbecueDetailResult>(query, new { id });
@@ -102,7 +100,7 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             }
         }
 
-        public void Insert(BarbecueSchedule entity)
+        public void Insert(Barbecue entity)
         {
             try
             {
@@ -114,7 +112,7 @@ namespace BrazilianBarbecue.Infrastructure.Repositories
             }
         }
 
-        public void Update(BarbecueSchedule entity)
+        public void Update(Barbecue entity)
         {
             try
             {

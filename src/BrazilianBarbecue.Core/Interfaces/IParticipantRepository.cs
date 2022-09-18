@@ -8,5 +8,7 @@ namespace BrazilianBarbecue.Core.Interfaces
         IEnumerable<ParticipantResult> GetAll();
 
         ParticipantResult GetById(int id);
+
+        ParticipantResult GetByEmail(string email);
     }
 }

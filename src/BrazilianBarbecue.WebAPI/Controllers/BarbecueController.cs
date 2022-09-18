@@ -9,48 +9,48 @@ namespace BrazilianBarbecue.WebAPI.Controllers
     public class BarbecueController : ControllerBase
     {
         readonly IBarbecueParticipantService _barbecueParticipantService;
-        readonly IBarbecueScheduleService _barbecueScheduleService;
+        readonly IBarbecueService _barbecueService;
 
-        public BarbecueController(IBarbecueParticipantService barbecueParticipantService, IBarbecueScheduleService barbecueScheduleService)
+        public BarbecueController(IBarbecueParticipantService barbecueParticipantService, IBarbecueService barbecueService)
         {
             _barbecueParticipantService = barbecueParticipantService;
-            _barbecueScheduleService = barbecueScheduleService;
+            _barbecueService = barbecueService;
         }
 
-        #region BarbecueSchedule
-        [HttpPost("scheduling")]
-        public CommandResult Scheduling([FromBody] CreateBarbecueScheduleCommand cmd) => _barbecueScheduleService.Insert(cmd);
+        #region Barbecue
+        [HttpPost]
+        public CommandResult Insert([FromBody] CreateBarbecueCommand cmd) => _barbecueService.Insert(cmd);
 
         [HttpDelete("{id:int}")]
-        public CommandResult RemoveBarbecueSchedule([FromRoute] int id) => _barbecueScheduleService.Delete(id);
+        public CommandResult Delete([FromRoute] int id) => _barbecueService.Delete(id);
 
         [HttpPut]
-        public CommandResult Update([FromBody] UpdateBarbecueScheduleCommand cmd) => _barbecueScheduleService.Update(cmd);
+        public CommandResult Update([FromBody] UpdateBarbecueCommand cmd) => _barbecueService.Update(cmd);
 
         [HttpGet("all")]
-        public CommandResult GetAll() => _barbecueScheduleService.GetAll();
+        public CommandResult GetAll() => _barbecueService.GetAll();
 
         [HttpGet("{id:int}")]
-        public CommandResult GetById([FromRoute] int id) => _barbecueScheduleService.GetById(id);
+        public CommandResult GetById([FromRoute] int id) => _barbecueService.GetById(id);
 
         [HttpGet("{id:int}/detail")]
-        public CommandResult GetDetailById([FromRoute] int id) => _barbecueScheduleService.GetDetailById(id);
+        public CommandResult GetDetailById([FromRoute] int id) => _barbecueService.GetDetailById(id);
         #endregion
 
         #region BarbecueParticipant
-        [HttpPost("scheduling/participant")]
+        [HttpPost("participant")]
         public CommandResult InsertParticipant([FromBody] CreateBarbecueParticipantCommand cmd) => _barbecueParticipantService.Insert(cmd);
 
-        [HttpPut("scheduling/participant")]
+        [HttpPut("participant")]
         public CommandResult UpdateParticipant([FromBody] UpdateBarbecueParticipantCommand cmd) => _barbecueParticipantService.Update(cmd);
 
-        [HttpDelete("scheduling/participant/{id:int}")]
-        public CommandResult RemoveBarbecueParticipant([FromRoute] int id) => _barbecueParticipantService.Delete(id);
+        [HttpDelete("participant/{id:int}")]
+        public CommandResult DeleteParticipant([FromRoute] int id) => _barbecueParticipantService.Delete(id);
 
-        [HttpGet("/scheduling/{id:int}/participant")]
+        [HttpGet("/{id:int}/participant")]
         public CommandResult GetAllByBarbecueId([FromRoute] int id) => _barbecueParticipantService.GetAllByBarbecueId(id);
 
-        [HttpPost("/scheduling/participant/{id:int}/confirm-payment")]
+        [HttpPost("/participant/{id:int}/confirm-payment")]
         public CommandResult ConfirmPayment([FromRoute] int id) => _barbecueParticipantService.ConfirmPayment(id);
         #endregion
     }

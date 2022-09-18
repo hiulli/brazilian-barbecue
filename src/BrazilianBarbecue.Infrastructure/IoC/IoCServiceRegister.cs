@@ -11,12 +11,12 @@ namespace BrazilianBarbecue.Infrastructure.IoC
         {
             //Add Service            
             services.AddScoped<IParticipantService, ParticipantService>();
-            services.AddScoped<IBarbecueScheduleService, BarbecueScheduleService>();
+            services.AddScoped<IBarbecueService, BarbecueService>();
             services.AddScoped<IBarbecueParticipantService, BarbecueParticipantService>();
 
             //Add Repository            
             services.AddScoped<IParticipantRepository, ParticipantRepository>();
-            services.AddScoped<IBarbecueScheduleRepository, BarbecueScheduleRepository>();
+            services.AddScoped<IBarbecueRepository, BarbecueRepository>();
             services.AddScoped<IBarbecueParticipantRepository, BarbecueParticipantRepository>();
         }
     }

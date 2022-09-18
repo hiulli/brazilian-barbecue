@@ -18,7 +18,7 @@ namespace BrazilianBarbecue.WebAPI.Controllers
         public CommandResult Insert([FromBody] CreateParticipantCommand cmd) =>   _participantService.Insert(cmd);
 
         [HttpDelete("{id:int}")]
-        public CommandResult Delete([FromQuery] int id) => _participantService.Delete(id);
+        public CommandResult Delete([FromRoute] int id) => _participantService.Delete(id);
 
         [HttpPut]
         public CommandResult Update([FromBody] UpdateParticipantCommand cmd) => _participantService.Update(cmd);
@@ -27,6 +27,6 @@ namespace BrazilianBarbecue.WebAPI.Controllers
         public CommandResult GetAll() => _participantService.GetAll();
                 
         [HttpGet("{id:int}")]
-        public CommandResult GetById([FromQuery] int id) => _participantService.GetById(id);
+        public CommandResult GetById([FromRoute] int id) => _participantService.GetById(id);
     }
 }
